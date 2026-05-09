@@ -4,6 +4,16 @@
 # Waits for each service to be ready before starting the next.
 # Usage: ./start.sh
 
+# Shut down Steam if running (frees GPU VRAM for llama-server)
+if pgrep -x steam > /dev/null 2>&1; then
+    echo "Steam is running — shutting down to free GPU VRAM..."
+    steam -shutdown
+    while pgrep -x steam > /dev/null 2>&1; do
+        sleep 1
+    done
+    echo "Steam shut down."
+fi
+
 wait_for_url() {
     local url=$1
     local name=$2
